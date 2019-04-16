@@ -100,5 +100,14 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-#pycharm
+### IntelliJ IDEA ###
 .idea
+*.iws
+*.iml
+*.ipr
+
+### VS Code ###
+.vscode/
+
+### mac os ###
+.DS_Store
