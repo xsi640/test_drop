@@ -3,7 +3,7 @@
 author: suyang
 '''
 from flask import current_app
-from sqlalchemy import Integer, Column, String, Boolean, Float
+from sqlalchemy import Integer, Column, String, Boolean, Float, or_
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from itsdangerous import JSONWebSignatureSerializer as Serializer
@@ -16,11 +16,19 @@ __author__ = 'suyang'
 
 class User(Base, UserMixin):
     id = Column(Integer, primary_key=True, autoincrement=True)
-    nickname = Column(String(24), nullable=False)
+    username = Column(String(50), nullable=False, unique=True)
+    nickname = Column(String(50), nullable=True)
     phone_number = Column(String(18), unique=True)
     _password = Column('password', String(128), nullable=False)
-    email = Column(String(50), nullable=False, unique=True)
-    confirmed = Column(Boolean, default=False)
+    email = Column(String(50), nullable=True, unique=True)
+
+    @classmethod
+    def find_user(self, username_or_password):
+        return User.query.filter(or_(User.username == username_or_password, User.email == username_or_password)).first()
+
+    def save(self):
+        with db.auto_commit():
+            db.session.add(self)
 
     @property
     def password(self):

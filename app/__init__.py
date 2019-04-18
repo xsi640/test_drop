@@ -35,8 +35,9 @@ def create_app():
 
     mail.init_app(app)
 
-    migrate = Migrate(app, db)
     db.init_app(app)
     db.create_all(app=app)
+
+    migrate = Migrate(app, db)
 
     return app

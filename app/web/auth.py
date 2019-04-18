@@ -13,19 +13,28 @@ __author__ = 'suyang'
 def login():
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate():
-        user = User.query.filter_by(email=form.email.data).first()
+        user = User.find_user(form.username.data)
         if user and user.check_password(form.password.data):
             login_user(user)
             next = request.args.get('next')
             if not next or not next.startswith('/'):
-                next = url_for('web.index')
+                next = url_for('web.main')
             return redirect(next)
         else:
             flash('账号不存在或密码错误')
-    return render_template('/auth/login.html', form=form)
+    return render_template('login.html', form=form)
 
 
 @web.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('web.index'))
+
+
+@web.route("/initUser")
+def initUser():
+    user = User()
+    user.username = 'admin'
+    user.password = 'admin123'
+    user.save()
+    return "add user."
