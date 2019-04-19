@@ -28,7 +28,7 @@ def login():
 @web.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('web.index'))
+    return redirect(url_for('web.login'))
 
 
 @web.route("/initUser")
